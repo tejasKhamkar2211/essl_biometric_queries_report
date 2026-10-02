@@ -1,0 +1,205 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ESSL Biometric Queries Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #f0f4f8, #d9e2ec);
+            min-height: 100vh;
+        }
+
+        h2, h4, h5 {
+            transition: all 0.3s ease;
+        }
+
+        h2:hover {
+            color: #0d6efd;
+            transform: scale(1.05);
+        }
+
+        .card {
+            border-radius: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        table th {
+            background: linear-gradient(to right, #0d6efd, #6c757d);
+            color: #fff;
+        }
+
+        table tbody tr:hover {
+            background-color: rgba(13, 110, 253, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        .btn {
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* ================= SUMMARY CARDS ================= */
+        .summary-card {
+            border-radius: 1rem;
+            color: #fff;
+            padding: 1rem;
+            height: 120px; /* Fixed height for all cards */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* vertical center */
+            align-items: center;     /* horizontal center */
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+
+        .summary-card h5 {
+            font-size: 1rem;
+            line-height: 1.2;
+            white-space: nowrap; /* prevent wrapping */
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+
+        .bg-biometric { background-color: #0d6efd; }
+        .bg-ydl { background-color: #198754; }
+        .bg-total { background-color: #6c757d; }
+        .bg-functionality { background-color: #ffc107; color: #212529; }
+
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+
+    <!-- ================= SUMMARY HEADER ================= -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="summary-card bg-biometric text-center shadow-sm">
+                <h5>Biometric Device</h5>
+                <p class="fs-4 fw-bold">{{ biometric_count }}</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="summary-card bg-ydl text-center shadow-sm">
+                <h5>YDL CRM</h5>
+                <p class="fs-4 fw-bold">{{ ydl_crm_count }}</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="summary-card bg-total text-center shadow-sm">
+                <h5>Total Queries</h5>
+                <p class="fs-4 fw-bold">{{ total_queries }}</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="summary-card bg-functionality text-center shadow-sm">
+                <h5>New Functionality Added</h5>
+                <p class="fs-4 fw-bold">{{ functionality_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= DOWNLOAD BUTTON ================= -->
+    <div class="card mb-4 shadow-sm p-4 text-center bg-light">
+        <h4 class="mb-3">Reports</h4>
+        <a href="{% url 'download_report_page' %}" class="btn btn-info btn-lg">
+            Download Report
+        </a>
+    </div>
+
+    <!-- ================= QUERIES SECTION ================= -->
+    <h2 class="mb-3">Last 10 Queries</h2>
+    <a href="{% url 'add_query' %}" class="btn btn-success mb-3">Add New Query</a>
+
+    <table class="table table-bordered table-striped table-hover shadow-sm">
+        <thead>
+            <tr>
+                <th class="text-center">Sr No</th>
+                <th class="text-center">Date</th>
+                <th>FC ID & Name</th>
+                <th>Description</th>
+                <th class="text-center">Related System</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for query in queries %}
+            <tr>
+                <td class="text-center">{{ forloop.counter }}</td>
+                <td class="text-center">{{ query.date }}</td>
+                <td>{{ query.fc_id_name }}</td>
+                <td>{{ query.description|linebreaks }}</td>
+                <td class="text-center">{{ query.related_system }}</td>
+                <td class="text-center">
+                    <a href="{% url 'delete_query' query.id %}" 
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure you want to delete this query?');">
+                       Delete
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No queries found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ================= FUNCTIONALITY SECTION ================= -->
+    <h2 class="mb-3">Last 10 Functionalities</h2>
+    <a href="{% url 'add_functionality' %}" class="btn btn-primary mb-3">Add Functionality</a>
+
+    <table class="table table-bordered table-striped table-hover shadow-sm">
+        <thead>
+            <tr>
+                <th class="text-center">Sr No</th>
+                <th class="text-center">Date</th>
+                <th>FC ID & Name</th>
+                <th>Description of Functionality</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for func in functionalities %}
+            <tr>
+                <td class="text-center">{{ forloop.counter }}</td>
+                <td class="text-center">{{ func.date }}</td>
+                <td>{{ func.fc_id_name }}</td>
+                <td>{{ func.description|linebreaks }}</td>
+                <td class="text-center">
+                    <a href="{% url 'delete_functionality' func.id %}" 
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure you want to delete this functionality?');">
+                       Delete
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No functionalities found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Query</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Add New Query</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label>Date</label>
+            <input type="date" name="date" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>FC ID & Name</label>
+            <input type="text" name="fc_id_name" class="form-control" placeholder="2332 - Xumo Fitness" required>
+        </div>
+        <div class="mb-3">
+            <label>Description of Query</label>
+            <textarea name="description" class="form-control" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label>Related System</label>
+            <select name="related_system" class="form-control" required>
+                <option value="Biometric Device">Biometric Device</option>
+                <option value="YDL CRM">YDL CRM</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Query</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </form>
+</div>
+</body>
+</html>
