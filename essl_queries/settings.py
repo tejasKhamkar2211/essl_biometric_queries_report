@@ -83,17 +83,30 @@ DATABASES = {
     }
 }'''
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'esslbioqueries',
+#         'USER': 'root',
+#         'PASSWORD': 'Satara@123',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#         },
+#     }
+# }
+
+import os
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'esslbioqueries',
-        'USER': 'root',
-        'PASSWORD': 'Satara@123',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.environ["MYSQLDATABASE"],
+        "USER": os.environ["MYSQLUSER"],
+        "PASSWORD": os.environ["MYSQLPASSWORD"],
+        "HOST": os.environ["MYSQLHOST"],
+        "PORT": os.environ.get("MYSQLPORT", "3306"),
     }
 }
 
